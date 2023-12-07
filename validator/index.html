@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>Validate</title>
+  <meta charset="utf-8"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@latest/dist/browser.script.iife.js"></script>
+  <script type="text/ruby">
+    require "js"
+
+    def document
+      @document ||= JS.global[:document]
+    end
+    
+    def validate_phone(text)
+      cond = text.match?(/\A0\d{10}\Z/)
+      err = document.getElementById("phone_error")
+      if cond
+        err[:innerText] = ""
+      else
+        err[:innerText] = "電話番号が不正です"
+      end
+    end
+
+    def validate_email(text)
+      email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+      cond = text.match?(email_regex)
+      err = document.getElementById("email_error")
+      if cond
+        err[:innerText] = ""
+      else
+        err[:innerText] = "Emailが不正です"
+      end
+    end
+    
+    phone_input = document.getElementById("phone")
+    email_input = document.getElementById("email")
+    
+    phone_input.addEventListener "change" do |e|
+      validate_phone(e[:target][:value].to_s)
+    end
+
+    email_input.addEventListener "change" do |e|
+      validate_email(e[:target][:value].to_s)
+    end
+    
+    button = document.getElementById('validateButton');
+    
+    button.addEventListener "click" do |e|
+      validate_phone(phone_input[:value].to_s)
+      validate_email(email_input[:value].to_s)
+    end
+  </script>
+</head>
+<body class="bg-gray-100 p-5">
+  <div class="max-w-md mx-auto bg-white shadow-lg rounded p-5">
+    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">電話番号:</label>
+    <input type="text" inputmode="numeric" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div id="phone_error" class="text-red-500 text-sm mt-2"></div>
+    
+    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+    <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div id="email_error" class="text-red-500 text-sm mt-2"></div>
+
+    <button id="validateButton" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">バリデート</button>
+  </div>
+</body>
+</html>

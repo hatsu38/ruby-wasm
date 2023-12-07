@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>Ruby Code Executor</title>
+    <meta charset="utf-8"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@latest/dist/browser.script.iife.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.0/ace.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/ruby">
+      require "js"
+
+      def document
+        @document ||= JS.global[:document]
+      end
+
+      def execute_ruby_code(code)
+        begin
+          result = eval(code)
+          document.getElementById("result")[:innerText] = "結果: #{result}"
+        rescue Exception => e
+          document.getElementById("result")[:innerText] = "エラー: #{e.message}"
+        end
+      end
+
+      button = document.getElementById('executeButton')
+
+      button.addEventListener "click" do |e|
+        ruby_code = document.getElementById("ruby_code")[:value].to_s
+        execute_ruby_code(ruby_code)
+      end
+    </script>
+  </head>
+  <body class="bg-gray-100 p-5">
+    <div class="container mx-auto bg-white shadow-lg rounded p-5">
+      <label for="ruby_code_editor" class="block text-gray-700 text-sm font-bold mb-2">Rubyコード:</label>
+      <div id="ruby_code_editor" class="w-full h-96 rounded"></div>
+      <textarea id="ruby_code" class="hidden">class Fibonacci
+  def initialize
+    @num1, @num2 = 0, 1
+  end
+
+  def next_number
+    @num1, @num2 = @num2, @num1 + @num2
+    @num1
+  end
+  
+  def answer
+    @num1
+  end
+end
+
+fib = Fibonacci.new
+10.times { puts fib.next_number }
+
+fib.answer</textarea>
+      <button id="executeButton" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">実行</button>
+      <div id="result" class="text-green-500 text-sm mt-2"></div>
+    </div>
+    <script>
+      const editor = ace.edit("ruby_code_editor");
+      editor.setValue(`class Fibonacci
+  def initialize
+    @num1, @num2 = 0, 1
+  end
+
+  def next_number
+    @num1, @num2 = @num2, @num1 + @num2
+    @num1
+  end
+  
+  def answer
+    @num1
+  end
+end
+
+fib = Fibonacci.new
+10.times { puts fib.next_number }
+
+fib.answer
+`);
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/ruby");
+      editor.session.setUseSoftTabs(true);
+      editor.setFontSize(14);
+      editor.resize()
+      editor.getSession().setUseWrapMode(true);
+      editor.getSession().setTabSize(2);
+      editor.$blockScrolling = Infinity;
+    
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+      });
+
+      editor.on('change', (arg, activeEditor) => {
+        const aceEditor = activeEditor;
+        const newHeight = aceEditor.getSession().getScreenLength() *
+          (aceEditor.renderer.lineHeight + aceEditor.renderer.scrollBar.getWidth());
+        aceEditor.container.style.height = `${newHeight}px`;
+        aceEditor.resize();
+      });
+
+      editor.getSession().on('change', function(){
+        const code = editor.getValue();
+        document.getElementById("ruby_code").value = code;
+      });
+    </script>
+  </body>
+</html>
