@@ -30,14 +30,17 @@
 
     def test_regex(pattern, text, options)
       regex = Regexp.new(pattern, options)
-      if (match = regex.match(text))
-        highlighted_text = text.sub(regex, "<span class='bg-yellow-400 text-black px-1 font-bold'>#{match}</span>")
-        status_message = "<span class='text-green-500'>マッチしました</span>"
+      matches = text.scan(regex)
+    
+      if matches.any?
+        highlighted_text = text.gsub(regex) { |match| "<span class='bg-yellow-400 text-black px-1 font-bold'>#{match}</span>" }
+        status_message = "<span class='text-green-500'>#{matches.size}個のマッチが見つかりました</span>"
         result = highlighted_text
       else
         status_message = "<span class='text-red-500'>マッチしませんでした。</span>"
         result = text
       end
+    
       document.getElementById('statusMessage')[:innerHTML] = status_message
       document.getElementById('result')[:innerHTML] = result
     end
