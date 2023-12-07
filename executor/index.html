@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Ruby WASM Executor" />
     <meta property="og:description" content="このページでは、Rubyコードをwasmを用いてオンラインで実行し、結果を表示します。" />
-    <meta property="og:image" content="https://github.com/hatsu38/ruby-wasm/assets/16137809/09e98914-b937-435e-b667-401f5cd7c6bf" />
+    <meta property="og:image" content="https://github.com/hatsu38/ruby-wasm/assets/16137809/8730843f-504c-4b3f-8dae-baafae82c54b" />
     <meta property="og:site_name" content="Ruby WASM Executor" />
     <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -18,7 +18,7 @@
     <meta name="twitter:description" content="このページでは、Rubyコードをwasmを用いてオンラインで実行し、結果を表示します。" />
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@latest/dist/browser.script.iife.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ruby/3.2-wasm-wasi@2.3.0/dist/browser.script.iife.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.0/ace.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script type="text/ruby">
@@ -32,7 +32,7 @@
       
       def execute_ruby_code(code)
         result = eval(code)
-        document.getElementById('result')[:innerText] = "結果: #{result}"
+        document.getElementById('result')[:innerText] = result.to_s
       rescue Exception => e
         document.getElementById('result')[:innerText] = "エラー: #{e.message}"
       end
@@ -42,7 +42,7 @@
       button.addEventListener 'click' do |_e|
         ruby_code = document.getElementById('ruby_code')[:value].to_s
         execute_ruby_code(ruby_code)
-      end      
+      end
     </script>
   </head>
   <body class="bg-gray-800 p-5 text-white">
@@ -70,7 +70,10 @@ fib = Fibonacci.new
 
 fib.answer</textarea>
       <button id="executeButton" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">実行</button>
-      <div id="result" class="text-green-500 text-sm mt-2"></div>
+      <div class="bg-gray-900 text-gray-300 font-mono text-sm p-4 rounded mt-2">
+        <span class="text-green-400">[user@terminal]</span><br />
+        <span class="mr-2 text-green-400">$</span><span id="result"></span>
+      </div>
     </div>
     <script>
       const editor = ace.edit("ruby_code_editor");
