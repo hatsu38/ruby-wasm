@@ -2,7 +2,21 @@
 <html lang="ja">
   <head>
     <title>Ruby WASM Regex Tester</title>
+    <meta name="description" content="Ruby正規表現を試すことができるサンプルページです。">
     <meta charset="utf-8"/>
+    <meta property="og:url" content="https://hatsu38.github.io/ruby-wasm/regex/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ruby WASM Regex" />
+    <meta property="og:description" content="Ruby正規表現を試すことができるサンプルページです。" />
+    <meta property="og:image" content="https://github.com/hatsu38/ruby-wasm/assets/16137809/f78debb4-5002-409e-b5ac-5cc668b05902" />
+    <meta property="og:site_name" content="Ruby WASM Regex" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@hatsu_38" />
+    <meta name="twitter:creator" content="@hatsu_38" />
+    <meta name="twitter:title" content="Ruby WASM Regex" />
+    <meta name="twitter:description" content="Ruby正規表現を試すことができるサンプルページです。" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@latest/dist/browser.script.iife.js"></script>
     <script type="text/ruby">
@@ -34,24 +48,25 @@
       
       button.addEventListener 'click' do
         test_regex(regex_input[:value].to_s, test_input[:value].to_s)
-      end      
+      end
     </script>
   </head>
   <body class="bg-gray-800 p-5 text-white">
     <div class="max-w-xl mx-auto bg-gray-700 border border-gray-600 shadow-lg rounded p-5">
-        <label for="regex" class="block text-sm font-bold mb-2">正規表現:</label>
-        <input type="text" id="regex" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" value="https?:\/\/[\w]+\.[\w]+(?:\.[\w]+)+[\/\w._?%&=-]*">
+      <h1 class="text-xl font-bold text-white my-4 text-center">Ruby WASM Regex Tester</h1>
+      <label for="regex" class="block text-sm font-bold mb-2">正規表現:</label>
+      <input type="text" id="regex" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" value="https?:\/\/[\w]+\.[\w]+(?:\.[\w]+)+[\/\w._?%&=-]*">
 
-        <label for="testString" class="block text-sm font-bold mb-2 mt-4">テスト文字列:</label>
-        <textarea id="testString" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" rows="4">こちらはテスト文章です。URLの例: https://www.example.com</textarea>
+      <label for="testString" class="block text-sm font-bold mb-2 mt-4">テスト文字列:</label>
+      <textarea id="testString" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" rows="4">こちらはテスト文章です。URLの例: https://www.example.com</textarea>
 
-        <button id="runButton" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">正規表現をテスト</button>
+      <button id="runButton" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">正規表現をテスト</button>
 
-        <div class="text-sm mt-4 p-3">
-          <span>実行結果：</span>
-          <span id="statusMessage">-</span>
-        </div>
-        <div id="result" class="text-sm mt-4 p-3 border border-gray-600 rounded bg-gray-900"> </div>
+      <div class="text-sm mt-4 p-3">
+        <span>実行結果：</span>
+        <span id="statusMessage">-</span>
+      </div>
+      <div id="result" class="text-sm mt-4 p-3 border border-gray-600 rounded bg-gray-900"> </div>
     </div>
   </body>
 </html>
