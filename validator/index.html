@@ -6,63 +6,86 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@latest/dist/browser.script.iife.js"></script>
   <script type="text/ruby">
-    require "js"
+    # frozen_string_literal: true
 
+    require 'js'
+    
     def document
       @document ||= JS.global[:document]
     end
     
     def validate_phone(text)
       cond = text.match?(/\A0\d{10}\Z/)
-      err = document.getElementById("phone_error")
-      if cond
-        err[:innerText] = ""
-      else
-        err[:innerText] = "電話番号が不正です"
-      end
+      err = document.getElementById('phone_error')
+      err[:innerText] = cond ? '' : '電話番号が不正です'
     end
-
+    
     def validate_email(text)
       email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
       cond = text.match?(email_regex)
-      err = document.getElementById("email_error")
-      if cond
-        err[:innerText] = ""
-      else
-        err[:innerText] = "Emailが不正です"
+      err = document.getElementById('email_error')
+      err[:innerText] = cond ? '' : 'Emailが不正です'
+    end
+    
+    def validate_password(text)
+      password_regex = /\A(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}\z/
+      cond = text.match?(password_regex)
+      err = document.getElementById('password_error')
+      err[:innerText] = cond ? '' : 'パスワードが不正です（最低8文字、大文字、小文字、数字を含む必要があります）'
+    end
+    
+    phone_input = document.getElementById('phone')
+    email_input = document.getElementById('email')
+    password_input = document.getElementById('password')
+    
+    [phone_input, email_input, password_input].each do |input|
+      input.addEventListener 'input' do |e|
+        method = "validate_#{input[:id]}"
+        send(method, e[:target][:value].to_s)
       end
     end
     
-    phone_input = document.getElementById("phone")
-    email_input = document.getElementById("email")
+    button = document.getElementById('validateButton')
     
-    phone_input.addEventListener "change" do |e|
-      validate_phone(e[:target][:value].to_s)
-    end
-
-    email_input.addEventListener "change" do |e|
-      validate_email(e[:target][:value].to_s)
-    end
-    
-    button = document.getElementById('validateButton');
-    
-    button.addEventListener "click" do |e|
+    button.addEventListener 'click' do
       validate_phone(phone_input[:value].to_s)
       validate_email(email_input[:value].to_s)
-    end
+      validate_password(password_input[:value].to_s)
+    end    
   </script>
 </head>
-<body class="bg-gray-100 p-5">
-  <div class="max-w-md mx-auto bg-white shadow-lg rounded p-5">
-    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">電話番号:</label>
-    <input type="text" inputmode="numeric" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+<body class="bg-gray-800 p-5 text-white">
+  <div class="max-w-md mx-auto bg-gray-700 shadow-lg rounded p-5">
+    <label for="phone" class="block bg-gray-700 text-sm font-bold my-2">電話番号:</label>
+    <input type="text" inputmode="numeric" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     <div id="phone_error" class="text-red-500 text-sm mt-2"></div>
     
-    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-    <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <label for="email" class="block bg-gray-700 text-sm font-bold my-2">Email:</label>
+    <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     <div id="email_error" class="text-red-500 text-sm mt-2"></div>
 
-    <button id="validateButton" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">バリデート</button>
+    <label for="password" class="block bg-gray-700 text-sm font-bold my-2">パスワード:</label>
+    <input type="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="パスワード">
+    <div id="password_error" class="text-red-500 text-sm mt-2"></div>
+    <label class="flex items-center mt-3">
+      <input type="checkbox" id="passwordToggle" class="form-checkbox h-5 w-5 text-gray-600"><span class="ml-2 bg-gray-700">パスワードを表示</span>
+    </label>
+
+    <button id="validateButton" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">バリデートを実行</button>
   </div>
+  <script>
+    // passwordの表示・非表示を切り替える
+    const passwordInput = document.getElementById("password")
+    const passwordToggle = document.getElementById("passwordToggle")
+    passwordToggle.addEventListener("click", () => {
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text"
+        passwordToggle.innerText = "パスワードを隠す"
+      } else {
+        passwordInput.type = "password"
+        passwordToggle.innerText = "パスワードを表示"
+      }
+    })
+  </script>
 </body>
 </html>

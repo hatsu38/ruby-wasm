@@ -9,7 +9,7 @@ end
 def execute_ruby_code(code)
   result = eval(code)
   document.getElementById('result')[:innerText] = "結果: #{result}"
-rescue StandardError => e
+rescue Exception => e
   document.getElementById('result')[:innerText] = "エラー: #{e.message}"
 end
 
